@@ -29,7 +29,6 @@ influxdb_database = ''
 
 def writetoinflux(type, date, measurement, fixrate):
     if (write_to_influx):
-        #print("sending data to influx")
         client = InfluxDBClient(host=influxdb_ip, port=influxdb_port,
                                 username=influxdb_username, password=influxdb_password)
         client.switch_database(influxdb_database)
@@ -49,6 +48,29 @@ def writetoinflux(type, date, measurement, fixrate):
         client.write_points(json_body)
 
 
+def writetoinflux2(type, today, fixrate):
+    if (write_to_influx):
+        client = InfluxDBClient(host=influxdb_ip, port=influxdb_port,
+                                username=influxdb_username, password=influxdb_password)
+        client.switch_database(influxdb_database)
+        json_body = [
+            {
+                "measurement": "Switch2",
+                "tags": {
+                    "type": type
+                },
+                "time": today,
+                "fields": {
+                    "fix_rate": fixrate
+                }
+            }
+        ]
+        client.write_points(json_body)
+
+
+today = date.today()
+today = parse(today.strftime("%B %d, %Y"))
+
 options = Options()
 options.headless = True
 options.add_argument("--log-level=3")
@@ -62,7 +84,7 @@ driver.find_element_by_id("loginButton").click()
 time.sleep(3)
 password = driver.find_element_by_id("Password")
 password.clear()
-print("sending password:  " + pwd)
+print("sending password")
 password.send_keys(pwd)
 driver.find_element_by_id("nextStepButton").click()
 time.sleep(3)
@@ -146,6 +168,10 @@ for each_type in types:
                           int(measurement_int), fix_rate)
         except:
             pass
+
+    # This Will Ensure that we get the fixed rates in, even in days where measurements failed
+    writetoinflux2(each_type, today, fix_rate)
+
 
 driver.quit()
 exit()
