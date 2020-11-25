@@ -14,10 +14,10 @@ username = ''
 pwd = ''
 
 ########### GET ALL THE DATA (FIRST RUN) OR GET ONLY THE LATEST DATA (FOR DAILY POLLING)
-get = "latest"  # "latest" or all"
+get = "latest"  # "latest" or "all"
 
 
-########### InfluxDB information. In case you want to save data to influx to grapf with Grafana #############
+########### InfluxDB information. In case you want to save data to influx to graph with Grafana #############
 write_to_influx = True
 influxdb_ip = ''
 influxdb_port = ''
