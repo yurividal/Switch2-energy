@@ -8,6 +8,7 @@ import time
 import datetime
 from influxdb import InfluxDBClient
 from dateutil.parser import parse
+from sys import exit
 
 ######### SWITCH2.CO.UK CREDENTIALS ###################
 username = ''
@@ -26,8 +27,9 @@ influxdb_password = ''
 influxdb_database = ''
 
 
-def writetoinflux(type, date, measurement):
+def writetoinflux(type, date, measurement, fixrate):
     if (write_to_influx):
+        #print("sending data to influx")
         client = InfluxDBClient(host=influxdb_ip, port=influxdb_port,
                                 username=influxdb_username, password=influxdb_password)
         client.switch_database(influxdb_database)
@@ -39,7 +41,8 @@ def writetoinflux(type, date, measurement):
                 },
                 "time": date,
                 "fields": {
-                    "measurement": measurement
+                    "measurement": measurement,
+                    "fix_rate": fixrate
                 }
             }
         ]
@@ -59,7 +62,7 @@ driver.find_element_by_id("loginButton").click()
 time.sleep(3)
 password = driver.find_element_by_id("Password")
 password.clear()
-print("sending password")
+print("sending password:  " + pwd)
 password.send_keys(pwd)
 driver.find_element_by_id("nextStepButton").click()
 time.sleep(3)
@@ -68,13 +71,24 @@ if ("Welcome" in driver.page_source):
 
 else:
     print("login error")
-    return 1
+    exit(1)
 
 driver.get('https://my.switch2.co.uk/MeterReadings/History')
 
-types = ["Water", "Electricity", "Heat"]
+
+types = ["Water", "Electricity", "Heat", "Sewerage"]
 
 for each_type in types:
+    fix_rate = 0
+    if each_type == "Water":
+        fix_rate = 0.04466
+    if each_type == "Electricity":
+        fix_rate = 0.142
+    if each_type == "Heat":
+        fix_rate = 0.72
+    if each_type == "Sewerage":
+        fix_rate = 0.05133
+
     print("#######################  Measurements for " +
           each_type + " ##################################")
     el = driver.find_element_by_id('RegisterId')
@@ -82,6 +96,11 @@ for each_type in types:
         if each_type in option.text:
             option.click()
             break
+        elif each_type == "Sewerage":
+            if "Water" in option.text:
+                option.click()
+                break
+
     el = driver.find_element_by_id('PageSize')
     for option in el.find_elements_by_tag_name('option'):
         if option.text == 'All':
@@ -104,7 +123,7 @@ for each_type in types:
                     ' m3', "").replace(' kWh', "")
                 print(str(parse(date.text)) + " = " + measurement_int)
                 writetoinflux(each_type, parse(
-                    date.text), int(measurement_int))
+                    date.text), int(measurement_int), fix_rate)
             except:
                 pass
 
@@ -123,9 +142,10 @@ for each_type in types:
             measurement_int = measurement.text.replace(
                 ' m3', "").replace(' kWh', "")
             print(str(parse(date.text)) + " = " + measurement_int)
-            writetoinflux(each_type, parse(date.text), int(measurement_int))
+            writetoinflux(each_type, parse(date.text),
+                          int(measurement_int), fix_rate)
         except:
             pass
 
 driver.quit()
-return 0
+exit()
