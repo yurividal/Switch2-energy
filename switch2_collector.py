@@ -9,6 +9,7 @@ import datetime
 from influxdb import InfluxDBClient
 from dateutil.parser import parse
 from sys import exit
+from datetime import date, timedelta
 
 ######### SWITCH2.CO.UK CREDENTIALS ###################
 username = ''
