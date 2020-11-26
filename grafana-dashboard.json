@@ -16,10 +16,11 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 14,
+  "iteration": 1606375537443,
   "links": [],
   "panels": [
     {
-      "datasource": null,
+      "datasource": "switch2",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -96,7 +97,7 @@
           ],
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
+          "policy": "switch2",
           "query": "SELECT last(\"measurement\") - first(\"measurement\") AS \"Volume\" FROM \"Switch2\" WHERE (\"type\" = 'Water') AND $timeFilter",
           "rawQuery": true,
           "refId": "A",
@@ -153,8 +154,8 @@
           ],
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT (last(\"measurement\") - first(\"measurement\"))*1.365 as \"cost\" FROM \"Switch2\" WHERE (\"type\" = 'Water') AND $timeFilter",
+          "policy": "switch2",
+          "query": "SELECT (last(\"measurement\")*last(\"unit_cost\") - first(\"measurement\")*last(\"unit_cost\")) as \"cost\" FROM \"Switch2\" WHERE (\"type\" = 'Water') AND $timeFilter",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
@@ -200,7 +201,7 @@
       "type": "stat"
     },
     {
-      "datasource": null,
+      "datasource": "switch2",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -277,7 +278,7 @@
           ],
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
+          "policy": "switch2",
           "query": "SELECT last(\"measurement\") - first(\"measurement\") AS \"Volume\" FROM \"Switch2\" WHERE (\"type\" = 'Heat') AND $timeFilter",
           "rawQuery": true,
           "refId": "A",
@@ -334,8 +335,8 @@
           ],
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT (last(\"measurement\") - first(\"measurement\"))*0.0695 as \"cost\" FROM \"Switch2\" WHERE (\"type\" = 'Heat') AND $timeFilter",
+          "policy": "switch2",
+          "query": "SELECT (last(\"measurement\")*last(\"unit_cost\") - first(\"measurement\")*last(\"unit_cost\")) as \"cost\" FROM \"Switch2\" WHERE (\"type\" = 'Heat') AND $timeFilter",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
@@ -381,7 +382,7 @@
       "type": "stat"
     },
     {
-      "datasource": null,
+      "datasource": "switch2",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -458,7 +459,7 @@
           ],
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
+          "policy": "switch2",
           "query": "SELECT last(\"measurement\") - first(\"measurement\") AS \"Volume\" FROM \"Switch2\" WHERE (\"type\" = 'Electricity') AND $timeFilter",
           "rawQuery": true,
           "refId": "A",
@@ -515,8 +516,8 @@
           ],
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT (last(\"measurement\") - first(\"measurement\"))*0.135 as \"cost\" FROM \"Switch2\" WHERE (\"type\" = 'Electricity') AND $timeFilter",
+          "policy": "switch2",
+          "query": "SELECT (last(\"measurement\")*last(\"unit_cost\") - first(\"measurement\")*last(\"unit_cost\")) as \"cost\" FROM \"Switch2\" WHERE (\"type\" = 'Electricity') AND $timeFilter",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
@@ -562,7 +563,7 @@
       "type": "stat"
     },
     {
-      "datasource": null,
+      "datasource": "switch2",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -571,7 +572,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "rgb(176, 127, 54)",
+                "color": "rgb(191, 147, 97)",
                 "value": null
               }
             ]
@@ -603,7 +604,7 @@
         "x": 12,
         "y": 0
       },
-      "id": 8,
+      "id": 16,
       "interval": "24h",
       "options": {
         "colorMode": "background",
@@ -639,8 +640,8 @@
           ],
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT last(\"measurement\") - first(\"measurement\") AS \"Volume\" FROM \"Switch2\" WHERE (\"type\" = 'Water') AND $timeFilter",
+          "policy": "switch2",
+          "query": "SELECT last(\"measurement\") - first(\"measurement\") AS \"Volume\" FROM \"Switch2\" WHERE (\"type\" = 'Sewerage') AND $timeFilter",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -696,8 +697,8 @@
           ],
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT (last(\"measurement\") - first(\"measurement\"))*0.826 as \"cost\" FROM \"Switch2\" WHERE (\"type\" = 'Water') AND $timeFilter",
+          "policy": "switch2",
+          "query": "SELECT (last(\"measurement\")*last(\"unit_cost\") - first(\"measurement\")*last(\"unit_cost\")) as \"cost\" FROM \"Switch2\" WHERE (\"type\" = 'Sewerage') AND $timeFilter",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
@@ -739,6 +740,106 @@
       "timeFrom": null,
       "timeShift": null,
       "title": "Sewerage Usage over time",
+      "transformations": [],
+      "type": "stat"
+    },
+    {
+      "datasource": "switch2",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgba(254, 254, 254, 0.67)",
+                "value": null
+              }
+            ]
+          },
+          "unit": "currencyGBP"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cost"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyGBP"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 17,
+        "y": 0
+      },
+      "id": 8,
+      "interval": "24h",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.3.4",
+      "targets": [
+        {
+          "groupBy": [],
+          "hide": false,
+          "measurement": "Switch2",
+          "orderByTime": "ASC",
+          "policy": "switch2",
+          "query": "SELECT count(\"fix_rate\")*$sum_of_fixed_rates FROM \"Switch2\" WHERE (\"type\" = 'Electricity') AND $timeFilter",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "fix_rate"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type",
+              "operator": "=",
+              "value": "Electricity"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Fixed Rate in Time-Range",
       "transformations": [],
       "type": "stat"
     },
@@ -801,7 +902,7 @@
             }
           ],
           "orderByTime": "ASC",
-          "policy": "default",
+          "policy": "switch2",
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -834,7 +935,7 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": null,
+      "datasource": "switch2",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -899,7 +1000,7 @@
           ],
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
+          "policy": "autogen",
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -979,7 +1080,7 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": null,
+      "datasource": "switch2",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -1044,7 +1145,7 @@
           ],
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
+          "policy": "autogen",
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -1120,13 +1221,14 @@
     {
       "aliasColors": {
         "Electricity": "yellow",
+        "Fixed Rate": "rgba(255, 255, 255, 0.42)",
         "Heat": "purple",
         "Sewerage": "rgb(166, 90, 35)"
       },
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": null,
+      "datasource": "switch2",
       "decimals": 2,
       "fieldConfig": {
         "defaults": {
@@ -1146,7 +1248,7 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 11,
+        "h": 12,
         "w": 24,
         "x": 0,
         "y": 12
@@ -1184,6 +1286,46 @@
       "steppedLine": false,
       "targets": [
         {
+          "alias": "Fixed Rate",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "Switch2",
+          "orderByTime": "ASC",
+          "policy": "switch2",
+          "query": "SELECT sum(\"fix_rate\") FROM \"Switch2\" WHERE (time >= 1577836800000ms and time <= 1609372800000ms) GROUP BY time($__interval) fill(previous)",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "fix_rate"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "sum"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
           "alias": "Electricity",
           "groupBy": [
             {
@@ -1202,8 +1344,8 @@
           "hide": false,
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT (difference(last(\"measurement\")))*0.135 FROM \"Switch2\" WHERE (\"type\" = 'Electricity') AND (time >= 1577836800000ms and time <= 1609372800000ms) GROUP BY time($__interval) fill(previous)",
+          "policy": "switch2",
+          "query": "SELECT (difference(last(\"measurement\")))*(last(\"unit_cost\")) FROM \"Switch2\" WHERE (\"type\" = 'Electricity') AND (time >= 1577836800000ms and time <= 1609372800000ms) GROUP BY time($__interval) fill(previous)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -1249,10 +1391,11 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT (difference(last(\"measurement\")))*0.0695 FROM \"Switch2\" WHERE (\"type\" = 'Heat') AND (time >= 1577836800000ms and time <= 1609372800000ms) GROUP BY time($__interval) fill(previous)",
+          "policy": "switch2",
+          "query": "SELECT (difference(last(\"measurement\")))*(last(\"unit_cost\")) FROM \"Switch2\" WHERE (\"type\" = 'Heat') AND (time >= 1577836800000ms and time <= 1609372800000ms) GROUP BY time($__interval) fill(previous)",
           "rawQuery": true,
           "refId": "C",
           "resultFormat": "time_series",
@@ -1301,8 +1444,8 @@
           "hide": false,
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT (difference(last(\"measurement\")))*1.365 FROM \"Switch2\" WHERE (\"type\" = 'Water') AND (time >= 1577836800000ms and time <= 1609372800000ms) GROUP BY time($__interval) fill(previous)",
+          "policy": "switch2",
+          "query": "SELECT (difference(last(\"measurement\")))*(last(\"unit_cost\")) FROM \"Switch2\" WHERE (\"type\" = 'Water') AND (time >= 1577836800000ms and time <= 1609372800000ms) GROUP BY time($__interval) fill(previous)",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
@@ -1351,8 +1494,8 @@
           "hide": false,
           "measurement": "Switch2",
           "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT (difference(last(\"measurement\")))*0.826 FROM \"Switch2\" WHERE (\"type\" = 'Water') AND (time >= 1577836800000ms and time <= 1609372800000ms) GROUP BY time($__interval) fill(previous)",
+          "policy": "switch2",
+          "query": "SELECT (difference(last(\"measurement\")))*(last(\"unit_cost\")) FROM \"Switch2\" WHERE (\"type\" = 'Sewerage') AND (time >= 1577836800000ms and time <= 1609372800000ms) GROUP BY time($__interval) fill(previous)",
           "rawQuery": true,
           "refId": "D",
           "resultFormat": "time_series",
@@ -1426,6 +1569,206 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "datasource": "switch2",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 14,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "7.3.4",
+      "targets": [
+        {
+          "alias": "Electricity",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "Switch2",
+          "orderByTime": "ASC",
+          "policy": "switch2",
+          "query": "SELECT mean(\"measurement\") as \"Electricity\" FROM \"Switch2\"  WHERE (\"type\" = 'Electricity') AND $timeFilter GROUP BY time($__interval) fill(none)  ORDER BY time DESC\nLIMIT 5",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "measurement"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type",
+              "operator": "=",
+              "value": "Electricity"
+            }
+          ]
+        },
+        {
+          "alias": "Electricity",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "Switch2",
+          "orderByTime": "ASC",
+          "policy": "switch2",
+          "query": "SELECT mean(\"measurement\") as \"Heat\" FROM \"Switch2\"  WHERE (\"type\" = 'Heat') AND $timeFilter GROUP BY time($__interval) fill(none)  ORDER BY time DESC\nLIMIT 5",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "measurement"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type",
+              "operator": "=",
+              "value": "Electricity"
+            }
+          ]
+        },
+        {
+          "alias": "Electricity",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "Switch2",
+          "orderByTime": "ASC",
+          "policy": "switch2",
+          "query": "SELECT mean(\"measurement\") as \"Water\" FROM \"Switch2\"  WHERE (\"type\" = 'Water') AND $timeFilter GROUP BY time($__interval) fill(none)  ORDER BY time DESC\nLIMIT 5",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "measurement"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "type",
+              "operator": "=",
+              "value": "Electricity"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Latest Raw",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {}
+        }
+      ],
+      "type": "table"
     }
   ],
   "refresh": false,
@@ -1433,7 +1776,198 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "0.9579",
+          "value": "0.9579"
+        },
+        "error": null,
+        "hide": 2,
+        "label": "daily_fixed",
+        "name": "sum_of_fixed_rates",
+        "options": [
+          {
+            "selected": true,
+            "text": "0.9579",
+            "value": "0.9579"
+          }
+        ],
+        "query": "0.9579",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "0.044667",
+          "value": "0.044667"
+        },
+        "error": null,
+        "hide": 2,
+        "label": "water_daily",
+        "name": "water_fixed_daily",
+        "options": [
+          {
+            "selected": true,
+            "text": "0.044667",
+            "value": "0.044667"
+          }
+        ],
+        "query": "0.044667",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "0.05133",
+          "value": "0.05133"
+        },
+        "error": null,
+        "hide": 2,
+        "label": "sewerage_daily",
+        "name": "sewerage_fixed_daily",
+        "options": [
+          {
+            "selected": true,
+            "text": "0.05133",
+            "value": "0.05133"
+          }
+        ],
+        "query": "0.05133",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "0.142",
+          "value": "0.142"
+        },
+        "error": null,
+        "hide": 2,
+        "label": "elec_daily",
+        "name": "elec_fixed_daily",
+        "options": [
+          {
+            "selected": true,
+            "text": "0.142",
+            "value": "0.142"
+          }
+        ],
+        "query": "0.142",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "0.72",
+          "value": "0.72"
+        },
+        "error": null,
+        "hide": 2,
+        "label": "heat_daily",
+        "name": "heat_fixed_daily",
+        "options": [
+          {
+            "selected": true,
+            "text": "0.72",
+            "value": "0.72"
+          }
+        ],
+        "query": "0.72",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "1.365",
+          "value": "1.365"
+        },
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "water_unit_cost",
+        "options": [
+          {
+            "selected": true,
+            "text": "1.365",
+            "value": "1.365"
+          }
+        ],
+        "query": "1.365",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "0.0695",
+          "value": "0.0695"
+        },
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "heat_unit_cost",
+        "options": [
+          {
+            "selected": true,
+            "text": "0.0695",
+            "value": "0.0695"
+          }
+        ],
+        "query": "0.0695",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "0.135",
+          "value": "0.135"
+        },
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "elec_unit_cost",
+        "options": [
+          {
+            "selected": true,
+            "text": "0.135",
+            "value": "0.135"
+          }
+        ],
+        "query": "0.135",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "0.826",
+          "value": "0.826"
+        },
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "sewerage_unit_cost",
+        "options": [
+          {
+            "selected": true,
+            "text": "0.826",
+            "value": "0.826"
+          }
+        ],
+        "query": "0.826",
+        "skipUrlSync": false,
+        "type": "constant"
+      }
+    ]
   },
   "time": {
     "from": "now/M",
@@ -1456,5 +1990,5 @@
   "timezone": "",
   "title": "Switch2",
   "uid": "Vg465gRRk",
-  "version": 19
+  "version": 35
 }
