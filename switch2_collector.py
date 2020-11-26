@@ -28,7 +28,9 @@ influxdb_password = ''
 influxdb_database = ''
 
 
-def writetoinflux(type, date, measurement, fixrate):
+
+
+def writetoinflux(type, date, measurement, fixrate, unitcost):
     if (write_to_influx):
         client = InfluxDBClient(host=influxdb_ip, port=influxdb_port,
                                 username=influxdb_username, password=influxdb_password)
@@ -42,7 +44,8 @@ def writetoinflux(type, date, measurement, fixrate):
                 "time": date,
                 "fields": {
                     "measurement": measurement,
-                    "fix_rate": fixrate
+                    "fix_rate": fixrate,
+                    "unit_cost": unitcost
                 }
             }
         ]
@@ -103,14 +106,19 @@ types = ["Water", "Electricity", "Heat", "Sewerage"]
 
 for each_type in types:
     fix_rate = 0
+    unit_cost = 0
     if each_type == "Water":
         fix_rate = 0.04466
+        unit_cost = 1.365
     if each_type == "Electricity":
         fix_rate = 0.142
+        unit_cost = 0.135
     if each_type == "Heat":
         fix_rate = 0.72
+        unit_cost = 0.0695
     if each_type == "Sewerage":
         fix_rate = 0.05133
+        unit_cost = 0.826
 
     print("#######################  Measurements for " +
           each_type + " ##################################")
@@ -146,7 +154,7 @@ for each_type in types:
                     ' m3', "").replace(' kWh', "")
                 print(str(parse(date.text)) + " = " + measurement_int)
                 writetoinflux(each_type, parse(
-                    date.text), int(measurement_int), fix_rate)
+                    date.text), int(measurement_int), fix_rate, unit_cost)
             except:
                 pass
 
@@ -166,7 +174,7 @@ for each_type in types:
                 ' m3', "").replace(' kWh', "")
             print(str(parse(date.text)) + " = " + measurement_int)
             writetoinflux(each_type, parse(date.text),
-                          int(measurement_int), fix_rate)
+                          int(measurement_int), fix_rate, unit_cost)
         except:
             pass
 
